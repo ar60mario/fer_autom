@@ -88,4 +88,19 @@ public class CompraService {
         }
         return compras;
     }
+    
+    public List<Compra> getComprasByFechaAndComprobante(Date de, String comprobante) throws Exception {
+        List<Compra> compras = null;
+        Session session = HibernateUtils.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            compras = new CompraBO().getComprasByFechaAndComprobante(de, comprobante);
+            tx.commit();
+        } catch (Exception ex) {
+            tx.rollback();
+            throw new Exception(ex);
+        }
+        return compras;
+    }
+    
 }

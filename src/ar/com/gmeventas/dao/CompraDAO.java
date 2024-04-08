@@ -35,4 +35,12 @@ public class CompraDAO extends GenericDAO{
         criteria.add(Restrictions.between("fecha", de, al));
         return (List<Compra>) criteria.list();
     }
+    
+    public List<Compra> getComprasByFechaAndComprobante(Date de, String comprobante) {
+        Session session = HibernateUtils.getSessionFactory().getCurrentSession();
+        Criteria criteria = session.createCriteria(Compra.class);
+        criteria.add(Restrictions.eq("fecha", de));
+        criteria.add(Restrictions.eq("comprobante", comprobante));
+        return (List<Compra>) criteria.list();
+    }
 }

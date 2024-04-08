@@ -80,7 +80,7 @@ public class FacturarFrame extends javax.swing.JFrame {
     private String vencCae = "";
     private Cliente cli;
     private final int seg = 15;
-    private final int tst = 0; // 1 esta en test
+    private final int tst = 1; // 1 esta en test
 
     /**
      * Creates new form FacturarFrame
@@ -1058,7 +1058,7 @@ public class FacturarFrame extends javax.swing.JFrame {
     }
 
     private void limpiar() {
-        
+
         int rows = tablaFactura.getRowCount();
         if (rows > 0) {
             DefaultTableModel tbl = (DefaultTableModel) tablaFactura.getModel();
@@ -1467,7 +1467,7 @@ public class FacturarFrame extends javax.swing.JFrame {
                 //System.exit(0);
             }
         }
-
+        copiarStock();
     }
 
     private void confirmar2() {

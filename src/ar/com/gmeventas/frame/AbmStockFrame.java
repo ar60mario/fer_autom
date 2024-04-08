@@ -6,13 +6,17 @@
 package ar.com.gmeventas.frame;
 
 import ar.com.gmeventas.entities.Compra;
+import ar.com.gmeventas.entities.Producto;
 import ar.com.gmeventas.main.MainFrame;
 import ar.com.gmeventas.services.CompraService;
+import ar.com.gmeventas.services.ProductoService;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -23,6 +27,8 @@ public class AbmStockFrame extends javax.swing.JFrame {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private DecimalFormat df = new DecimalFormat("#0.0");
+    private List<Compra> compras;
+
     /**
      * Creates new form AbmStockFrame
      */
@@ -47,6 +53,7 @@ public class AbmStockFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
         eliminarBtn = new javax.swing.JButton();
+        verFacturaBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("ABM STOCK");
@@ -97,6 +104,18 @@ public class AbmStockFrame extends javax.swing.JFrame {
         }
 
         eliminarBtn.setText("Eliminar");
+        eliminarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarBtnActionPerformed(evt);
+            }
+        });
+
+        verFacturaBtn.setText("VER FACTURA");
+        verFacturaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verFacturaBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -110,6 +129,8 @@ public class AbmStockFrame extends javax.swing.JFrame {
                         .addComponent(nuevoBtn)
                         .addGap(18, 18, 18)
                         .addComponent(eliminarBtn)
+                        .addGap(18, 18, 18)
+                        .addComponent(verFacturaBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(volverBtn)))
                 .addContainerGap())
@@ -123,7 +144,8 @@ public class AbmStockFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nuevoBtn)
                     .addComponent(volverBtn)
-                    .addComponent(eliminarBtn))
+                    .addComponent(eliminarBtn)
+                    .addComponent(verFacturaBtn))
                 .addContainerGap())
         );
 
@@ -137,6 +159,24 @@ public class AbmStockFrame extends javax.swing.JFrame {
     private void nuevoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoBtnActionPerformed
         nuevo();
     }//GEN-LAST:event_nuevoBtnActionPerformed
+
+    private void eliminarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBtnActionPerformed
+        int row = tabla.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "DEBE SELECCIONAR UN PRODUCTO PARA ELIMINAR");
+            return;
+        }
+        eliminar(row);
+    }//GEN-LAST:event_eliminarBtnActionPerformed
+
+    private void verFacturaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verFacturaBtnActionPerformed
+        int row = tabla.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "DEBE SELECCIONAR UN PRODUCTO PARA VER LA FACTURA COMPLETA");
+            return;
+        }
+        verFactura(row);
+    }//GEN-LAST:event_verFacturaBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,6 +218,7 @@ public class AbmStockFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton nuevoBtn;
     private javax.swing.JTable tabla;
+    private javax.swing.JButton verFacturaBtn;
     private javax.swing.JButton volverBtn;
     // End of variables declaration//GEN-END:variables
 
@@ -195,35 +236,77 @@ public class AbmStockFrame extends javax.swing.JFrame {
 
     private void llenarTabla() {
         limpiarTabla();
-        List<Compra> compras = null;
+        compras = null;
         try {
             compras = new CompraService().getCompraOrdenado();
         } catch (Exception ex) {
             Logger.getLogger(AbmStockFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(compras != null && !compras.isEmpty()){
+        llenarTabla2();
+        
+    }
+
+    private void limpiarTabla() {
+        int rows = tabla.getRowCount();
+        if (rows > 0) {
             DefaultTableModel tbl = (DefaultTableModel) tabla.getModel();
-            for(Compra c:compras){
-                Object o[] = new Object[7];
-                o[0]=c.getProveedor();
-                o[1]=sdf.format(c.getFecha());
-                o[2]=c.getComprobante();
-                o[3]=c.getProducto().getDetalle();
-                o[4]=df.format(c.getCantidad());
-                o[5]=c.getProducto().getRubro().getNombre();
-                o[6]=c.getProducto().getSubRubro().getDetalle();
-                tbl.addRow(o);
+            for (int i = 0; i < rows; i++) {
+                tbl.removeRow(0);
             }
             tabla.setModel(tbl);
         }
     }
 
-    private void limpiarTabla() {
-        int rows = tabla.getRowCount();
-        if(rows > 0){
+    private void eliminar(int row) {
+        Compra compra = compras.get(row);
+        Producto producto = compra.getProducto();
+        Float cantidad = compra.getCantidad();
+        Float stock = producto.getStock();
+        if(stock < 1){
+            JOptionPane.showMessageDialog(this, "PRODUCTO SIN STOCK - NO PUEDE ELIMINAR");
+            return;
+        }
+        producto.setStock(stock - cantidad);
+        int a = JOptionPane.showConfirmDialog(this, "CONFIRME AJUSTAR STOCK Y ELIMINAR PRODUCTO",
+                "Atención", JOptionPane.YES_NO_OPTION);
+        if(a==0){
+            try {
+                new ProductoService().updateProducto(producto);
+                new CompraService().deleteCompra(compra);
+            } catch (Exception ex) {
+                Logger.getLogger(AbmStockFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            llenarTabla();
+        }
+    }
+
+    private void verFactura(int row) {
+        Compra compra = compras.get(row);
+        String comprobante = compra.getComprobante();
+        Date fecha = compra.getFecha();
+        compras = null;
+        try {
+            compras = new CompraService().getComprasByFechaAndComprobante(fecha, comprobante);
+        } catch (Exception ex) {
+            Logger.getLogger(AbmStockFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        llenarTabla2();
+    }
+
+    private void llenarTabla2() {
+        if (compras != null && !compras.isEmpty()) {
+            limpiarTabla();
             DefaultTableModel tbl = (DefaultTableModel) tabla.getModel();
-            for(int i = 0;i < rows; i++){
-                tbl.removeRow(0);
+            for (Compra c : compras) {
+                Object o[] = new Object[7];
+                o[0] = c.getProveedor();
+                o[1] = sdf.format(c.getFecha());
+                o[2] = c.getComprobante();
+                o[3] = c.getProducto().getDetalle();
+                o[4] = df.format(c.getCantidad());
+                o[5] = c.getProducto().getRubro().getNombre();
+                o[6] = c.getProducto().getSubRubro().getDetalle();
+                tbl.addRow(o);
             }
             tabla.setModel(tbl);
         }

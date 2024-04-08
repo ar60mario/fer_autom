@@ -76,4 +76,15 @@ public class CompraBO {
         }
         return listCompras;
     }
+    
+    public List<Compra> getComprasByFechaAndComprobante(Date de, String comprobante) throws Exception {
+        List<Compra> listCompras = null;
+        try {
+            listCompras = dao.getComprasByFechaAndComprobante(de, comprobante);
+        } catch (HibernateException ex) {
+            throw new Exception(ex);
+        }
+        return listCompras;
+    }
+    
 }
