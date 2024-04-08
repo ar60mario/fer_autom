@@ -327,6 +327,29 @@ public class FacturarFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_nuevoBtnActionPerformed
 
     private void confirmarFacturasBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmarFacturasBtnActionPerformed
+        Date fechaFactura = new Date();
+        Date ultimaFechaFactura = new Date();
+        try {
+            fechaFactura = sdf.parse(fechaFacturasTxt.getText());
+            ultimaFechaFactura = sdf.parse(ultimaFechaFacturasTxt.getText());
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, "ERROR EN LAS FECHAS DE FACTURAS");
+            return;
+        }
+        if (fechaFactura.before(ultimaFechaFactura)) {
+            JOptionPane.showMessageDialog(this, "ERROR NO PUEDE FACTURAR ANTES DE LA ULTIMA FECHA");
+            return;
+        }
+        Date f5d = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(f5d);
+        calendar.add(Calendar.DATE, -5);
+        f5d = calendar.getTime();
+
+        if (fechaFactura.before(f5d)) {
+            JOptionPane.showMessageDialog(this, "NO DEBE SUPERAR 5 DIAS ATRAS");
+            return;
+        }
         int a = JOptionPane.showConfirmDialog(this, "VERIFICO LA FECHA DE LAS FACTURAS???", "Atención", JOptionPane.YES_NO_OPTION);
         if (a == 0) {
             confirmar();

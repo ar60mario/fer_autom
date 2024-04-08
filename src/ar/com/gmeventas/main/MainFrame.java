@@ -85,7 +85,7 @@ public class MainFrame extends javax.swing.JFrame {
         clientesMnu = new javax.swing.JMenuItem();
         tipoDocMnu = new javax.swing.JMenuItem();
         stockMnu = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        stockValorizadoMnu = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         verificarAfipMnu = new javax.swing.JMenuItem();
         recuperarAfipMnu = new javax.swing.JMenuItem();
@@ -207,8 +207,13 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(stockMnu);
 
-        jMenuItem2.setText("Ver Productos Utilizados Inactivos");
-        jMenu1.add(jMenuItem2);
+        stockValorizadoMnu.setText("STOCK VALORIZADO");
+        stockValorizadoMnu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stockValorizadoMnuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(stockValorizadoMnu);
 
         jMenuBar1.add(jMenu1);
 
@@ -446,6 +451,10 @@ public class MainFrame extends javax.swing.JFrame {
         stockTodos();
     }//GEN-LAST:event_stockTodosMnuActionPerformed
 
+    private void stockValorizadoMnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockValorizadoMnuActionPerformed
+        stockValorizado();
+    }//GEN-LAST:event_stockValorizadoMnuActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -498,7 +507,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JButton notaCreditoBtn;
     private javax.swing.JMenuItem productosInactivosMnu;
     private javax.swing.JMenuItem productosMnu;
@@ -509,6 +517,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton salirBtn;
     private javax.swing.JMenuItem stockMnu;
     private javax.swing.JMenuItem stockTodosMnu;
+    private javax.swing.JMenuItem stockValorizadoMnu;
     private javax.swing.JMenuItem subRubrosMnu;
     private javax.swing.JMenuItem tipoDocMnu;
     private javax.swing.JMenuItem ventasPorPeriodoMnu;
@@ -682,5 +691,9 @@ public class MainFrame extends javax.swing.JFrame {
         InformeStockProductosFrame ispf = new InformeStockProductosFrame();
         ispf.setVisible(true);
         this.dispose();
+    }
+
+    private void stockValorizado() {
+        
     }
 }
