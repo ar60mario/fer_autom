@@ -80,7 +80,7 @@ public class FacturarFrame extends javax.swing.JFrame {
     private String vencCae = "";
     private Cliente cli;
     private final int seg = 15;
-    private final int tst = 1; // 1 esta en test
+    private final int tst = 0; // 1 esta en test
 
     /**
      * Creates new form FacturarFrame

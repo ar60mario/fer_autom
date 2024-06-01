@@ -59,6 +59,7 @@ public class MainFrame extends javax.swing.JFrame {
 //        duplicadoPdfMnu.setVisible(false);
         clientesMnu.setVisible(false);
         tipoDocMnu.setVisible(false);
+        stockValorizadoMnu.setVisible(false);
     }
 
     /**

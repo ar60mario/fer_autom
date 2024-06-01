@@ -7,9 +7,11 @@ package ar.com.gmeventas.frame;
 
 import ar.com.gmeventas.entities.Compra;
 import ar.com.gmeventas.entities.Producto;
+import ar.com.gmeventas.entities.ProductoTop;
 import ar.com.gmeventas.main.MainFrame;
 import ar.com.gmeventas.services.CompraService;
 import ar.com.gmeventas.services.ProductoService;
+import ar.com.gmeventas.services.ProductoTopService;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -260,13 +262,27 @@ public class AbmStockFrame extends javax.swing.JFrame {
     private void eliminar(int row) {
         Compra compra = compras.get(row);
         Producto producto = compra.getProducto();
+        ProductoTop productoTop;
+        Integer codigo = producto.getCodigo();
+        try {
+            productoTop = new ProductoTopService().getProductoTopByCodigo(codigo);
+        } catch (Exception ex) {
+            //Logger.getLogger(AbmStockFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "ERROR PRODUCTO - NO PUEDE ELIMINAR");
+            return;
+        }
         Float cantidad = compra.getCantidad();
         Float stock = producto.getStock();
         if(stock < 1){
             JOptionPane.showMessageDialog(this, "PRODUCTO SIN STOCK - NO PUEDE ELIMINAR");
             return;
         }
+        if(stock < cantidad){
+            JOptionPane.showMessageDialog(this, "PRODUCTO SIN STOCK SUFICIENTE - NO PUEDE ELIMINAR");
+            return;
+        }
         producto.setStock(stock - cantidad);
+        productoTop.setStock(stock - cantidad);
         int a = JOptionPane.showConfirmDialog(this, "CONFIRME AJUSTAR STOCK Y ELIMINAR PRODUCTO",
                 "Atención", JOptionPane.YES_NO_OPTION);
         if(a==0){
