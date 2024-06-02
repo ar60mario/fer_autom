@@ -16,6 +16,7 @@ import ar.com.gmeventas.frame.AbmRubroFrame;
 import ar.com.gmeventas.frame.AbmStockFrame;
 import ar.com.gmeventas.frame.AbmSubRubroFrame;
 import ar.com.gmeventas.frame.AbmTipoDocForm;
+import ar.com.gmeventas.frame.AjustarStockFrame;
 import ar.com.gmeventas.frame.BackupFrame;
 import ar.com.gmeventas.frame.DuplicadoFacturaFrame;
 import ar.com.gmeventas.frame.DuplicadoFacturaPdfFrame;
@@ -93,6 +94,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu5 = new javax.swing.JMenu();
         backupMnu = new javax.swing.JMenuItem();
         duplicadoPdfMnu = new javax.swing.JMenuItem();
+        ajustarStockMnu = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         ventasPorPeriodoMnu = new javax.swing.JMenuItem();
         stockTodosMnu = new javax.swing.JMenuItem();
@@ -256,6 +258,14 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu5.add(duplicadoPdfMnu);
 
+        ajustarStockMnu.setText("AJUSTAR STOCK");
+        ajustarStockMnu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ajustarStockMnuActionPerformed(evt);
+            }
+        });
+        jMenu5.add(ajustarStockMnu);
+
         jMenuBar1.add(jMenu5);
 
         jMenu4.setText("Informes");
@@ -352,9 +362,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_randomBtnActionPerformed
 
     private void productosUtilizadosMnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productosUtilizadosMnuActionPerformed
-        AbmProductosTopFrame apt = new AbmProductosTopFrame();
-        apt.setVisible(true);
-        this.dispose();
+        abmProdTop();
     }//GEN-LAST:event_productosUtilizadosMnuActionPerformed
 
     private void salirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBtnActionPerformed
@@ -369,21 +377,15 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_configuracionMnuActionPerformed
 
     private void verInactivosMnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verInactivosMnuActionPerformed
-        AbmProductosTopInactivosFrame apt = new AbmProductosTopInactivosFrame();
-        apt.setVisible(true);
-        this.dispose();
+        abmProdTopInactivos();
     }//GEN-LAST:event_verInactivosMnuActionPerformed
 
     private void verificarAfipMnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verificarAfipMnuActionPerformed
-        VerificarAfipFrame vaf = new VerificarAfipFrame();
-        vaf.setVisible(true);
-        this.dispose();
+        verificarAfip();
     }//GEN-LAST:event_verificarAfipMnuActionPerformed
 
     private void versionMnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_versionMnuActionPerformed
-        VersionFrame vf = new VersionFrame();
-        vf.setVisible(true);
-        this.dispose();
+        menuVersion();
     }//GEN-LAST:event_versionMnuActionPerformed
 
     private void productosMnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productosMnuActionPerformed
@@ -411,9 +413,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ventasPorPeriodoMnuActionPerformed
 
     private void stockMnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockMnuActionPerformed
-        AbmStockFrame asf = new AbmStockFrame();
-        asf.setVisible(true);
-        this.dispose();
+        abmStock();
     }//GEN-LAST:event_stockMnuActionPerformed
 
     private void informeStockMnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_informeStockMnuActionPerformed
@@ -456,6 +456,10 @@ public class MainFrame extends javax.swing.JFrame {
         stockValorizado();
     }//GEN-LAST:event_stockValorizadoMnuActionPerformed
 
+    private void ajustarStockMnuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajustarStockMnuActionPerformed
+        ajustarStock();
+    }//GEN-LAST:event_ajustarStockMnuActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -495,6 +499,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem ajustarStockMnu;
     private javax.swing.JMenuItem backupMnu;
     private javax.swing.JMenuItem cantidadesCompradasEntreFechasMnu;
     private javax.swing.JMenuItem cantidadesVendidasEntreFechasMnu;
@@ -696,5 +701,41 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void stockValorizado() {
         
+    }
+
+    private void abmProdTop() {
+        AbmProductosTopFrame apt = new AbmProductosTopFrame();
+        apt.setVisible(true);
+        this.dispose();
+    }
+
+    private void abmProdTopInactivos() {
+        AbmProductosTopInactivosFrame apt = new AbmProductosTopInactivosFrame();
+        apt.setVisible(true);
+        this.dispose();
+    }
+
+    private void abmStock() {
+        AbmStockFrame asf = new AbmStockFrame();
+        asf.setVisible(true);
+        this.dispose();
+    }
+
+    private void verificarAfip() {
+        VerificarAfipFrame vaf = new VerificarAfipFrame();
+        vaf.setVisible(true);
+        this.dispose();
+    }
+
+    private void menuVersion() {
+        VersionFrame vf = new VersionFrame();
+        vf.setVisible(true);
+        this.dispose();
+    }
+
+    private void ajustarStock() {
+        AjustarStockFrame asf = new AjustarStockFrame();
+        asf.setVisible(true);
+        this.dispose();
     }
 }

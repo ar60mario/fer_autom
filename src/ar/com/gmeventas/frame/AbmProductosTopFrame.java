@@ -66,14 +66,14 @@ public class AbmProductosTopFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Orden", "Código", "Detalle", "Activo", "Precio", "Cantidad"
+                "Orden", "Código", "Detalle", "Activo", "Precio", "Cant_vta", "Stock"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -124,7 +124,7 @@ public class AbmProductosTopFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 835, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(nuevoBtn)
                         .addGap(18, 18, 18)
@@ -238,7 +238,7 @@ public class AbmProductosTopFrame extends javax.swing.JFrame {
         if (productos != null && !productos.isEmpty()) {
             DefaultTableModel tbl = (DefaultTableModel) tablaProductos.getModel();
             for (ProductoTop p : productos) {
-                Object ob[] = new Object[6];
+                Object ob[] = new Object[7];
                 ob[0] = p.getOrden();
                 ob[1] = p.getCodigo();
                 Producto prd = null;
@@ -257,6 +257,7 @@ public class AbmProductosTopFrame extends javax.swing.JFrame {
                     ob[4] = df.format((prd.getPrecio() * (1 + pIva / 100)) + prd.getImpuesto());
                 }
                 ob[5] = p.getCantidad();
+                ob[6] = prd.getStock();
                 tbl.addRow(ob);
             }
             tablaProductos.setModel(tbl);

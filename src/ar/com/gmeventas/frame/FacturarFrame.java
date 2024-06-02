@@ -603,10 +603,14 @@ public class FacturarFrame extends javax.swing.JFrame {
                         rfc.setItemNro(cantRengl);
                         Integer cantidad = temp.getCantidad();
                         Float vendido;
+                        Random randCant = new Random();
+                        Double cantRnd = randCant.nextDouble() * cantidad.floatValue();
+                        
                         if (cantidad > stock) {
                             vendido = stock;
                         } else {
-                            vendido = cantidad.floatValue();
+//                            vendido = cantidad.floatValue();
+                            vendido = cantRnd.floatValue();
                         }
                         rfc.setCantidad(vendido);
                         // Calcular Precio
