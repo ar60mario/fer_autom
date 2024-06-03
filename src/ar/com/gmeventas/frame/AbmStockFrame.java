@@ -12,6 +12,7 @@ import ar.com.gmeventas.main.MainFrame;
 import ar.com.gmeventas.services.CompraService;
 import ar.com.gmeventas.services.ProductoService;
 import ar.com.gmeventas.services.ProductoTopService;
+import ar.com.gmeventas.util.UtilFrame;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -245,7 +246,7 @@ public class AbmStockFrame extends javax.swing.JFrame {
             Logger.getLogger(AbmStockFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         llenarTabla2();
-        
+
     }
 
     private void limpiarTabla() {
@@ -273,11 +274,11 @@ public class AbmStockFrame extends javax.swing.JFrame {
         }
         Float cantidad = compra.getCantidad();
         Float stock = producto.getStock();
-        if(stock < 1){
+        if (stock < 1) {
             JOptionPane.showMessageDialog(this, "PRODUCTO SIN STOCK - NO PUEDE ELIMINAR");
             return;
         }
-        if(stock < cantidad){
+        if (stock < cantidad) {
             JOptionPane.showMessageDialog(this, "PRODUCTO SIN STOCK SUFICIENTE - NO PUEDE ELIMINAR");
             return;
         }
@@ -285,7 +286,7 @@ public class AbmStockFrame extends javax.swing.JFrame {
         productoTop.setStock(stock - cantidad);
         int a = JOptionPane.showConfirmDialog(this, "CONFIRME AJUSTAR STOCK Y ELIMINAR PRODUCTO",
                 "Atención", JOptionPane.YES_NO_OPTION);
-        if(a==0){
+        if (a == 0) {
             try {
                 new ProductoService().updateProducto(producto);
                 new CompraService().deleteCompra(compra);
@@ -304,14 +305,18 @@ public class AbmStockFrame extends javax.swing.JFrame {
         try {
             compras = new CompraService().getComprasByFechaAndComprobante(fecha, comprobante);
         } catch (Exception ex) {
-            Logger.getLogger(AbmStockFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "ERROR nro. 305");
+            return;
         }
-        llenarTabla2();
+        VerFacturaCompraCompletaFrame vfcf = new VerFacturaCompraCompletaFrame(compras);
+        vfcf.setVisible(true);
+        this.dispose();
+
     }
 
     private void llenarTabla2() {
         if (compras != null && !compras.isEmpty()) {
-            limpiarTabla();
+            UtilFrame.limpiarTabla(tabla);
             DefaultTableModel tbl = (DefaultTableModel) tabla.getModel();
             for (Compra c : compras) {
                 Object o[] = new Object[7];
@@ -327,4 +332,5 @@ public class AbmStockFrame extends javax.swing.JFrame {
             tabla.setModel(tbl);
         }
     }
+
 }

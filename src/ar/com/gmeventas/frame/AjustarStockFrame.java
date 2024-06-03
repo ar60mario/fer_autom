@@ -7,8 +7,12 @@ package ar.com.gmeventas.frame;
 
 import ar.com.gmeventas.entities.Producto;
 import ar.com.gmeventas.main.MainFrame;
+import ar.com.gmeventas.services.ProductoService;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,7 +23,7 @@ public class AjustarStockFrame extends javax.swing.JFrame {
     private List<Producto> productos;
     private Producto producto;
     private DecimalFormat df = new DecimalFormat("#0.00");
-    
+
     /**
      * Creates new form AjustarStockFrame
      */
@@ -216,8 +220,8 @@ public class AjustarStockFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_grabarBtnActionPerformed
 
     private void codigoTxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codigoTxtKeyPressed
-        if(evt.getKeyCode()==10){
-            if(codigoTxt.getText().isEmpty()){
+        if (evt.getKeyCode() == 10) {
+            if (codigoTxt.getText().isEmpty()) {
                 filtroTxt.requestFocus();
             } else {
                 buscarPorCodigo();
@@ -226,8 +230,8 @@ public class AjustarStockFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_codigoTxtKeyPressed
 
     private void filtroTxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filtroTxtKeyPressed
-        if(evt.getKeyCode()==10){
-            if(filtroTxt.getText().isEmpty()){
+        if (evt.getKeyCode() == 10) {
+            if (filtroTxt.getText().isEmpty()) {
                 codigoTxt.requestFocus();
             } else {
                 buscarPorFiltro();
@@ -237,14 +241,22 @@ public class AjustarStockFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_filtroTxtKeyPressed
 
     private void comboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboActionPerformed
-        if(evt.getModifiers()==16){
-            
+        if (evt.getModifiers() == 16) {
+            int row = combo.getSelectedIndex();
+            if (row > 0) {
+                producto = productos.get(row - 1);
+                mostrarProducto();
+            }
         }
     }//GEN-LAST:event_comboActionPerformed
 
     private void comboKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboKeyPressed
-        if(evt.getKeyCode()==10){
-            
+        if (evt.getKeyCode() == 10) {
+            int row = combo.getSelectedIndex();
+            if(row > 0){
+                producto = productos.get(row -1);
+                mostrarProducto();
+            }
         }
     }//GEN-LAST:event_comboKeyPressed
 
@@ -303,6 +315,7 @@ public class AjustarStockFrame extends javax.swing.JFrame {
 
     private void limpiarCampos() {
         codigoTxt.setText("");
+        filtroTxt.setText("");
         detalleTxt.setText("");
         stockActualTxt.setText("");
         nuevoStockTxt.setText("");
@@ -310,13 +323,21 @@ public class AjustarStockFrame extends javax.swing.JFrame {
     }
 
     private void grabar() {
-        if(validar()){
-            
+        if (validar()) {
+            try {
+                new ProductoService().updateProducto(producto);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "ERROR nr 328");
+                return;
+            }
+            JOptionPane.showMessageDialog(this, "GRABADO OK");
+            volver();
         }
     }
 
     private void ponerEnCero() {
-        
+        producto.setStock(0F);
+        nuevoStockTxt.setText("0");
     }
 
     private void volver() {
@@ -326,18 +347,54 @@ public class AjustarStockFrame extends javax.swing.JFrame {
     }
 
     private boolean validar() {
+        if(nuevoStockTxt.getText().isEmpty()){
+            return false;
+        }
         return true;
     }
 
     private void buscarPorCodigo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (!codigoTxt.getText().isEmpty()) {
+            Integer codigo = Integer.valueOf(codigoTxt.getText());
+            try {
+                producto = new ProductoService().getProductoByCodigo(codigo);
+            } catch (Exception ex) {
+                Logger.getLogger(AjustarStockFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (producto != null) {
+                mostrarProducto();
+            }
+        }
     }
 
     private void buscarPorFiltro() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (!filtroTxt.getText().isEmpty()) {
+            String filtro = filtroTxt.getText();
+            try {
+                productos = new ProductoService().getProductosByFiltro(filtro);
+            } catch (Exception ex) {
+                Logger.getLogger(AjustarStockFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            llenarCombo();
+        }
     }
 
     private void llenarCombo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        combo.removeAllItems();
+        combo.addItem("");
+        if (productos != null && !productos.isEmpty()) {
+            for (Producto p : productos) {
+                combo.addItem(p.getDetalle());
+            }
+            combo.addFocusListener(null);
+            combo.showPopup();
+            combo.requestFocus();
+        }
+    }
+
+    private void mostrarProducto() {
+        detalleTxt.setText(producto.getDetalle());
+        stockActualTxt.setText(producto.getStock().toString());
+        nuevoStockTxt.requestFocus();
     }
 }
